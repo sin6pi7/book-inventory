@@ -1,38 +1,29 @@
+var MongoClient = require('mongodb').MongoClient;
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var app = express();
-
-// SPECIAL MIDDLEWARE
-app.use(bodyParser.json());
-
-// ROUTES
-app.post('/stock', function (req, res) {
-  res.json({
-    "isbn": req.body.isbn,
-    "count": req.body.count
-  });
-});
-
-// ERRORS
-app.use(clientError, serverError);
-
-module.exports = app;
-
-function clientError(req, res, next) {
-  var err = new Error('Resource not found');
-  err.status = 404;
-  next(err);
+function mongoStockRepository() {
+  var url = 'mongodb://localhost:27017/bookInventory';
+  var connection = MongoClient.connect(url);
+  return require('./stock-repository')(connection);
 }
 
-function serverError(err, req, res, next) {
-  console.error(err.stack);
-  res
-    .status(err.status || 500)
-    .json({
-      message: err.message,
-      error: process.env.NODE_ENV === 'production' ? '' : err
-    });
-}
+module.exports = function (config) {
+  var app = express();
+  var stockRepository = (config && config.stockRepository) || mongoStockRepository();
+  var stockRoutes = require('./routes/stock')(stockRepository);
+  var errorRoutes = require('./routes/errors');
 
+  // SPECIAL MIDDLEWARE
+  app.use(bodyParser.json());
 
+  // ROUTES
+  app.get('/stock', stockRoutes.findAll);
+  app.get('/stock/:isbn', stockRoutes.find);
+  app.post('/stock', stockRoutes.update);
+
+  // ERRORS
+  app.use(errorRoutes.client, errorRoutes.server);
+
+  return app;
+};
