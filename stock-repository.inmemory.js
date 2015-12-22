@@ -13,9 +13,7 @@ module.exports = function () {
       return Promise.resolve(stock || {});
     },
     updateByIsbn: function (isbn, stock) {
-      var idx = stocks.findIndex(function (lookedUpStock) {
-        return lookedUpStock.isbn == isbn;
-      });
+      var idx = stocks.findIndex((lookedUpStock) => lookedUpStock.isbn === isbn);
 
       if (idx === -1) {
         // create if not here
