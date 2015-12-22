@@ -3,7 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 function mongoStockRepository() {
-  var url = 'mongodb://localhost:27017/bookInventory';
+  var url = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/bookInventory';
   var connection = MongoClient.connect(url);
   return require('./stock-repository')(connection);
 }
