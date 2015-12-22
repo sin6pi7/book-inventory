@@ -1,8 +1,6 @@
 module.exports = function (stockRepository) {
   return {
     findAll: function (req, res, next) {
-      res.sendStatus(404);
-
       stockRepository
         .findAll()
         .then(function (stocks) {
