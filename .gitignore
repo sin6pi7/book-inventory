@@ -6,6 +6,7 @@
 
 # node deps
 node_modules
+npm-debug.log
 
 # dev db
 db
