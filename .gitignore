@@ -6,3 +6,6 @@
 
 # node deps
 node_modules
+
+# dev db
+db
