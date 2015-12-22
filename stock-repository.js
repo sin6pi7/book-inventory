@@ -4,7 +4,7 @@ module.exports = function (connection) {
       return connection
         .then(function (db) {
           return db
-            .collection('books')
+            .collection('books-bolek-zyla')
             .find()
             .toArray()
             .then(function (books) {
@@ -16,7 +16,7 @@ module.exports = function (connection) {
       return connection
         .then(function (db) {
           return db
-            .collection('books')
+            .collection('books-bolek-zyla')
             .findOne({ "isbn": isbn })
             .then(function (book) {
               return book;
@@ -28,7 +28,7 @@ module.exports = function (connection) {
       return connection
         .then(function (db) {
           return db
-            .collection('books')
+            .collection('books-bolek-zyla')
             .updateOne({
               isbn: isbn
             },
