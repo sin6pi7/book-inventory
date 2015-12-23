@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (stockRepository) {
   return {
     findAll: function (req, res, next) {
@@ -15,7 +17,15 @@ module.exports = function (stockRepository) {
       stockRepository
         .findByIsbn(req.params.isbn)
         .then(function (stock) {
-          res.json(stock);
+          let acceptHeader = req.header('Accept') || '';
+          let accepts = acceptHeader.split(',');
+
+          if (accepts.indexOf('text/html') !== -1) {
+            res.send(`<p>Count: ${stock.count}</p>`);
+          } else {
+            res.json(stock);
+          }
+
           return stock;
         })
         .catch(function (err) {
